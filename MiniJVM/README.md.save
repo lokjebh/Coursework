@@ -1,5 +1,0 @@
-## Implementing MiniJVM
-This program uses mini version of .class files that we will call .mclass files.
-Our .mclass files will contain only bytecodes, and only bytecodes for one 
-method. However, the format of the bytecodes is the same as that found in real
-.class files.
