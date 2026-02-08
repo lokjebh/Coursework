@@ -1,7 +1,10 @@
-# Online Restaurant Order System
-## Purpose
-* Write a program using PHP and MySQL that connects to a backend database
-* Allow a user to make updates, insertions, deletions and query a database
-* Create a program that runs on the internet
-* Create a Graphical User Interface using HTML, CSS, and Javascript
+# Food Order Management System
+
+## Project Description
+The Food Order Management System is a web-based application designed to manage restaurant operations. Built with PHP and MySQL, it allows users to interact with the `a2db` database to handle menu items, track customer orders, and manage driver deliveries.
+
+The system features a modular architecture, keeping database logic, styling, and user interface components separate for better maintainability.
+
+---
+
 
