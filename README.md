@@ -1,2 +1,2 @@
 # Coursework
-Assignments on CS courses
+Projects on CS courses
