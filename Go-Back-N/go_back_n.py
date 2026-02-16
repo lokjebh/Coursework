@@ -21,6 +21,33 @@ class GBN_sender:
 
     def prepare_packets(self):
         """Read input file and split it into encoded packets."""
+        with open(self.input_file, 'r') as f:
+            data = f.read()
+
+        bitstream = ''.join(format(ord(ch), '08b') for ch in data)
+        data_bits_len = self.packet_len - 16
+        if data_bits_len <= 0:
+            raise ValueError("packet_len must be greater than 16 to fit data bits")
+
+        packets = []
+        if not bitstream:
+            return packets
+
+        seq_num = 0
+        for i in range(0, len(bitstream), data_bits_len):
+            chunk = bitstream[i:i + data_bits_len]
+            seq_bits = format(seq_num, '016b')
+            packets.append(chunk + seq_bits)
+            seq_num += 1
+
+        return packets
+
+    def send_packets(self):
+        """Send all packets currently within the sliding window."""
+        pass
+
+    def send_next_packet(self):
+        """Advance the window and send the next packet."""
         pass
 
     def send_packets(self):
