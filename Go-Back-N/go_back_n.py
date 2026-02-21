@@ -50,14 +50,6 @@ class GBN_sender:
         """Advance the window and send the next packet."""
         pass
 
-    def send_packets(self):
-        """Send all packets currently within the sliding window."""
-        pass
-
-    def send_next_packet(self):
-        """Advance the window and send the next packet."""
-        pass
-
     def check_timers(self):
         """Check for timeouts within the current window."""
         pass
@@ -84,11 +76,38 @@ class GBN_receiver:
 
     def process_packet(self, packet):
         """Process a single incoming packet and send ACKs as needed."""
-        pass
+        if packet is None:
+            return False
+
+        seq_bits = packet[-16:]
+        seq_num = int(seq_bits, 2)
+        data_bits = packet[:-16]
+
+        if seq_num == self.expected_seq_num:
+            self.packet_list.append(data_bits)
+            self.ack_queue.put(seq_num)
+            self.logger.info(f"packet {seq_num} received")
+            self.expected_seq_num += 1
+            return True
+
+        last_in_order = self.expected_seq_num - 1
+        if last_in_order >= 0:
+            self.ack_queue.put(last_in_order)
+        self.logger.info(f"packet {seq_num} received out of order")
+        return False
 
     def write_to_file(self):
         """Write the reconstructed data to the output file."""
-        pass
+        bitstream = ''.join(self.packet_list)
+        chars = []
+        for i in range(0, len(bitstream), 8):
+            byte = bitstream[i:i + 8]
+            if len(byte) < 8:
+                break
+            chars.append(chr(int(byte, 2)))
+
+        with open(self.output_file, 'w') as f:
+            f.write(''.join(chars))
 
     def run(self):
         """Main receiver loop: read packets and finalize output."""
