@@ -45,3 +45,5 @@ Logs are written to `simulation.log`.
 - Not retransmitting the entire window on timeout
 - Writing output before all packets are received
 
+## Practical Upscaling
+Example: a simple file transfer utility over UDP where you add CRC checks, adaptive timeouts, and congestion control on top of this GBN logic.

@@ -1,3 +1,8 @@
+import queue
+import threading
+import time
+
+
 class GBN_sender:
     """Sender side of the Go-Back-N protocol."""
     def __init__(self, input_file, window_size, packet_len, nth_packet, send_queue, ack_queue, timeout_interval, logger):
@@ -13,11 +18,17 @@ class GBN_sender:
 
         self.base = 0
         self.packets = self.prepare_packets()
+        self.logger.info(
+            f"{len(self.packets)} packets created, Window size: {self.window_size}, "
+            f"Packet length: {self.packet_len}, Nth packet to be dropped: {self.nth_packet}, "
+            f"Timeout interval: {self.timeout_interval}"
+        )
         # One flag per packet to track whether its ACK has been received.
         self.acks_list = [False] * len(self.packets)
         # One timer slot per packet (None until started).
         self.packet_timers = [None] * len(self.packets)
         self.dropped_list = []
+        self.send_count = 0
 
     def prepare_packets(self):
         """Read input file and split it into encoded packets."""
@@ -42,25 +53,79 @@ class GBN_sender:
 
         return packets
 
+    def _send_packet(self, seq_num):
+        """Send a single packet and handle simulated loss."""
+        self.logger.info(f"Sender: sending packet {seq_num}")
+        self.send_count += 1
+        self.packet_timers[seq_num] = time.time()
+
+        if self.nth_packet and self.send_count % self.nth_packet == 0 and seq_num not in self.dropped_list:
+            self.dropped_list.append(seq_num)
+            self.logger.info(f"Sender: packet {seq_num} dropped")
+            return
+
+        self.send_queue.put(self.packets[seq_num])
+
     def send_packets(self):
         """Send all packets currently within the sliding window."""
-        pass
+        window_end = min(self.base + self.window_size, len(self.packets))
+        for seq_num in range(self.base, window_end):
+            if self.packet_timers[seq_num] is None:
+                self._send_packet(seq_num)
 
     def send_next_packet(self):
         """Advance the window and send the next packet."""
-        pass
+        while self.base < len(self.packets) and self.acks_list[self.base]:
+            self.base += 1
+
+        next_seq = self.base + self.window_size - 1
+        if next_seq < len(self.packets) and self.packet_timers[next_seq] is None:
+            self._send_packet(next_seq)
 
     def check_timers(self):
         """Check for timeouts within the current window."""
-        pass
+        now = time.time()
+        window_end = min(self.base + self.window_size, len(self.packets))
+        for seq_num in range(self.base, window_end):
+            if self.acks_list[seq_num]:
+                continue
+            start = self.packet_timers[seq_num]
+            if start is not None and now - start >= self.timeout_interval:
+                self.logger.info(f"Sender: packet {seq_num} timed out")
+                return True
+        return False
 
     def receive_acks(self):
         """Receive ACKs and advance the window accordingly."""
-        pass
+        while self.base < len(self.packets):
+            try:
+                ack = self.ack_queue.get(timeout=0.1)
+            except queue.Empty:
+                continue
+
+            if 0 <= ack < len(self.packets):
+                if self.acks_list[ack]:
+                    self.logger.info(f"Sender: ack {ack} received, Ignoring")
+                else:
+                    self.acks_list[ack] = True
+                    self.logger.info(f"Sender: ack {ack} received")
+                    self.send_next_packet()
 
     def run(self):
         """Main sender loop: send, receive ACKs, and handle timeouts."""
-        pass
+        self.send_packets()
+        ack_thread = threading.Thread(target=self.receive_acks, daemon=True)
+        ack_thread.start()
+
+        while self.base < len(self.packets):
+            if self.check_timers():
+                window_end = min(self.base + self.window_size, len(self.packets))
+                for seq_num in range(self.base, window_end):
+                    if not self.acks_list[seq_num]:
+                        self._send_packet(seq_num)
+
+        self.logger.info("Sender: All packets have been sent and acknowledgments processed.")
+        self.send_queue.put(None)
 
 class GBN_receiver:
     """Receiver side of the Go-Back-N protocol."""
@@ -86,14 +151,14 @@ class GBN_receiver:
         if seq_num == self.expected_seq_num:
             self.packet_list.append(data_bits)
             self.ack_queue.put(seq_num)
-            self.logger.info(f"packet {seq_num} received")
+            self.logger.info(f"Receiver: packet {seq_num} received")
             self.expected_seq_num += 1
             return True
 
         last_in_order = self.expected_seq_num - 1
         if last_in_order >= 0:
             self.ack_queue.put(last_in_order)
-        self.logger.info(f"packet {seq_num} received out of order")
+        self.logger.info(f"Receiver: packet {seq_num} received out of order")
         return False
 
     def write_to_file(self):
@@ -111,4 +176,14 @@ class GBN_receiver:
 
     def run(self):
         """Main receiver loop: read packets and finalize output."""
-        pass
+        while True:
+            try:
+                packet = self.send_queue.get(timeout=0.1)
+            except queue.Empty:
+                continue
+
+            if packet is None:
+                break
+            self.process_packet(packet)
+
+        self.write_to_file()
