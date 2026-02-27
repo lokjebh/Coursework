@@ -37,8 +37,59 @@ nav a {
     color: white;
     text-decoration: none;
     border: 2px black;
+    /* border-color: black; */
+    /* border-radius: 5px; */
 }
 
 .menu-options a:hover {
     background: #009966;
+}
+
+/* Table Styles */
+table {
+    width: 90%;
+    margin: 20px auto;
+    font-family: "Consolas", "Courier New", monospace; /* Matching your preference */
+    background-color: white;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left; /* Headers look better left-aligned for lists */
+}
+
+th {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #333;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Subtle zebra striping */
+}
+
+/* Sorting Form Styles */
+.sort-container {
+    font-family: Helvetica, Arial, sans-serif;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    display: inline-block;
+    background: #fff;
+    text-align: left;
+}
+
+.btn-update {
+    background-color: #00cc66;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-update:hover {
+    background-color: #009966;
 }
