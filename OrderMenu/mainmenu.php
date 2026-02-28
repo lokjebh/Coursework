@@ -22,11 +22,10 @@ include 'includes/header.php';
     <div class="menu-options">
         <ul>
             <li><a href="pages/view_menu.php">View Items</a></li>
-            <li><a href="pages/add_order.php">Add Order</a></li>
-            <li><a href="pages/Modify_item.php">Modify Items</a></li>
-            <li><a href="pages/delete_item.php">Delete Items</a></li>
+            <li><a href="pages/add_order.php">Add Order</a></li>            
+            <li><a href="pages/Modify_menuitem.php">Modify Items</a></li>
+            <li><a href="pages/order_details.php">View Orders</a></li>            
             <li><a href="pages/driver_report.php">View Drivers</a></li>
-            <li><a href="pages/order_details.php">View Orders</a></li>
         </ul>
     </div>
 </main>
