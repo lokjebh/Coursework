@@ -65,8 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     mysqli_query($conn, "INSERT INTO overallorder (orderid, menuitemid, quantity) VALUES ('$orderid', '$menuitemid', $quantity)");
                 }
             }
-            // Redirect to summary (a requirement to show the inserted order)
-            header("Location: order_summary.php?orderid=$orderid");
+            // Redirect to confirmation (a requirement to show the inserted order)
+            header("Location: order_confirmation.php?orderid=$orderid");
             exit();
         } else {
             $message = "<p style='color:red;'>Database Error: " . mysqli_error($conn) . "</p>";

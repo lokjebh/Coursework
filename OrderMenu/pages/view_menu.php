@@ -42,6 +42,10 @@ $result = mysqli_query($conn, $sql);
         </form>
     </div>
 
+    <div style="margin-bottom: 20px;">
+        <a href="add_menuitem.php" class="btn-update" style="text-decoration: none;">+ Add New Menu Item</a>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -62,6 +66,8 @@ $result = mysqli_query($conn, $sql);
                     echo "<td>" . $row["caloriecount"] . "</td>";
                     echo "<td>$" . number_format($row["price"], 2) . "</td>";
                     echo "<td>" . $row["veggie"] . "</td>";
+                    // Link to the modify page with the specific ID
+                    echo "<td><a href='modify_item.php?id=" . $row["menuitemid"] . "'>Edit/Delete</a></td>";
                     echo "</tr>";
                 }
             } else {
