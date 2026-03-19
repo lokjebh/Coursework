@@ -1,7 +1,19 @@
 # Coursework
 Projects on CS courses
 
-- [Food Order Management System | PHP, MySQL, HTML/CSS, Apache server](./OrderMenu)
-- [House Price Prediction | Python, pandas, scikit-learn, XGBoost](./HPPP/hppp.v3)
+### Computer networks
 - [Go-Back-N ARQ Simulator | Python](./Go-Back-N)
+
+### Full stack database web application
+- [Food Order Management System | PHP, MySQL, HTML/CSS, Apache server](./OrderMenu)
+
+### Data science & Machine Learning
+- [House Price Prediction | Python, pandas, scikit-learn, XGBoost](./ML/hpp_model/house_pred_model.md)
+- [Titanic Survival Classification | Python, scikit-learn, XGBoost, PyTorch](./ML/Titanic/titanic_survivals.md)
+
+### System Programming
+- [MiniJVM | C](./MiniJVM)
+
+### OOP using C++
+- [Minesweeper | C++, Qt as graphical framework](./Minisweeper)
 
