@@ -15,5 +15,5 @@ Projects on CS courses
 - [MiniJVM | C](./MiniJVM)
 
 ##### OOP using C++
-- [Minesweeper | C++, Qt as graphical framework](./Minisweeper)
+- [Minesweeper | C++, Qt as graphical framework](./Minesweeper)
 
