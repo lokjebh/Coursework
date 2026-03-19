@@ -8,7 +8,7 @@ Projects on CS courses
 - [Food Order Management System | PHP, MySQL, HTML/CSS, Apache server](./OrderMenu)
 
 ##### Data science & Machine Learning
-- [House Price Prediction | Python, pandas, scikit-learn, XGBoost](./ML/hpp_model/house_pred_model.md)
+- [House Price Prediction | Python, pandas, scikit-learn, XGBoost](./ML/HPP_Model/house_pred_model.md)
 - [Titanic Survival Classification | Python, scikit-learn, XGBoost, PyTorch](./ML/Titanic/titanic_survivals.md)
 
 ##### System Programming
